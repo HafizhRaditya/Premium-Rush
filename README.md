@@ -1,2 +1,2 @@
-# Premium-Rush
-My ride aint gonna betray me till my last breath
+To play the audio, install : pip install playsound3
+install this in your VS Code Terminal
