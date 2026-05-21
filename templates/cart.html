@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-section">
+    <h1>SHOPPING <span class="accent-text">CART</span></h1>
+    <p>Review your selected vehicles before checkout.</p>
+</div>
+
+<div class="cart-container">
+    {% if cart_items|length == 0 %}
+        <div class="empty-state">
+            <h2>Your cart is empty.</h2>
+            <p>Visit the <a href="{{ url_for('index') }}">Showroom</a> to find your dream car.</p>
+        </div>
+    {% else %}
+        <div class="cart-items">
+            {% for item in cart_items %}
+            <div class="cart-item">
+                <div class="cart-item-info">
+                    <h3>{{ item.brand }} {{ item.model }}</h3>
+                    <span class="car-type">{{ item.type }}</span>
+                </div>
+                <div class="cart-item-price">
+                    <span class="accent-text">${{ "{:,}".format(item.price) }}</span>
+                </div>
+                <div class="cart-item-action">
+                    <form action="{{ url_for('remove_from_cart', car_id=item.id) }}" method="POST">
+                        <button type="submit" class="btn-remove">Remove</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="cart-summary">
+            <h3>Total: <span class="accent-text">${{ "{:,}".format(total_price) }}</span></h3>
+            <a href="{{ url_for('checkout') }}" class="btn-primary" style="margin-top: 1.5rem;">Proceed to Checkout</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

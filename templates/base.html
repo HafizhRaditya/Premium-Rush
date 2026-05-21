@@ -3,30 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Motor Deluxe</title>
+    <title>Premium Motor Rush</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- Google Fonts for modern aesthetic -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Background Audio -->
     <audio id="bg-music" src="{{ url_for('static', filename='audio/Clair De Lune.mp3') }}" autoplay loop></audio>
 
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="logo">
-            <a href="{{ url_for('index') }}">PREMIUM <span class="neon-text">MOTOR DELUXE</span></a>
+            <a href="{{ url_for('index') }}">PREMIUM <span class="accent-text">MOTOR RUSH</span></a>
         </div>
         <div class="nav-links">
             <a href="{{ url_for('index') }}" class="nav-item">Showroom</a>
-            <a href="{{ url_for('garage') }}" class="nav-item">Garage</a>
+            {% if current_user.is_authenticated %}
+                {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="nav-item">Admin</a>
+                {% endif %}
+                <a href="{{ url_for('logout') }}" class="nav-item">Logout ({{ current_user.username }})</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="nav-item">Login</a>
+                <a href="{{ url_for('register') }}" class="nav-item">Register</a>
+            {% endif %}
         </div>
-        <div class="balance">
-            Balance: <span class="neon-text-green">${{ "{:,}".format(balance) }}</span>
+        <div class="cart-info">
+            <a href="{{ url_for('cart') }}" class="nav-item">
+                Cart: <span class="accent-text">{{ session.get('cart', [])|length }} items</span>
+            </a>
         </div>
     </nav>
 
-    <!-- Flash Messages -->
     <div class="flash-messages">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -37,13 +43,11 @@
         {% endwith %}
     </div>
 
-    <!-- Main Content -->
     <main class="container">
         {% block content %}{% endblock %}
     </main>
 
     <script>
-        // Start audio slightly delayed if browser blocks autoplay
         document.addEventListener('click', function() {
             var audio = document.getElementById('bg-music');
             if (audio.paused) {

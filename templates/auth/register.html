@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2><span class="accent-text">REGISTER</span></h2>
+    <form action="{{ url_for('register') }}" method="POST" class="auth-form">
+        <div class="form-group">
+            <label for="username">Choose Username</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Choose Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn-primary">Create Account</button>
+    </form>
+    <p class="auth-redirect">Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
+</div>
+{% endblock %}

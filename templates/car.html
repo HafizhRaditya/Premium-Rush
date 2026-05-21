@@ -6,7 +6,9 @@
     
     <div class="car-detail-card">
         <div class="detail-image-sec">
-            {% if car.type == 'Tuner' %}
+            {% if car.image_url %}
+                <img src="{{ url_for('static', filename=car.image_url) }}" alt="{{ car.model }}">
+            {% elif car.type == 'Tuner' %}
                 <img src="{{ url_for('static', filename='images/tuner.png') }}" alt="{{ car.model }}">
             {% elif car.type == 'Muscle' %}
                 <img src="{{ url_for('static', filename='images/muscle.png') }}" alt="{{ car.model }}">
@@ -16,8 +18,8 @@
         </div>
         
         <div class="detail-info-sec">
-            <div class="car-type {{ car.type.lower() }}">{{ car.type }} CLASS</div>
-            <h1>{{ car.brand }} <span class="neon-text">{{ car.model }}</span></h1>
+            <div class="car-type">{{ car.type }} CLASS</div>
+            <h1>{{ car.brand }} <span class="accent-text">{{ car.model }}</span></h1>
             
             <div class="specs-grid">
                 <div class="spec-item">
@@ -26,7 +28,7 @@
                 </div>
                 <div class="spec-item">
                     <span class="spec-label">Price</span>
-                    <span class="spec-value neon-text-green">${{ "{:,}".format(car.price) }}</span>
+                    <span class="spec-value accent-text">${{ "{:,}".format(car.price) }}</span>
                 </div>
             </div>
             
@@ -41,12 +43,12 @@
                 {% endif %}
             </div>
             
-            <form action="{{ url_for('buy_car', car_id=car.id) }}" method="POST">
-                <button type="submit" class="btn-buy" {% if balance < car.price %}disabled{% endif %}>
-                    {% if balance < car.price %}
-                        INSUFFICIENT FUNDS
+            <form action="{{ url_for('add_to_cart', car_id=car.id) }}" method="POST">
+                <button type="submit" class="btn-buy">
+                    {% if car.id in session.get('cart', []) %}
+                        ALREADY IN CART
                     {% else %}
-                        PURCHASE VEHICLE
+                        ADD TO CART
                     {% endif %}
                 </button>
             </form>

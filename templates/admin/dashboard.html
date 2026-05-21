@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-section">
+    <h1>ADMIN <span class="accent-text">DASHBOARD</span></h1>
+    <p>Manage your luxury inventory.</p>
+</div>
+
+<div class="admin-controls">
+    <a href="{{ url_for('admin_add_vehicle') }}" class="btn-primary" style="width: auto; padding: 1rem 2rem;">Add New Vehicle</a>
+</div>
+
+<div class="table-container">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in vehicles %}
+            <tr>
+                <td>{{ car.id }}</td>
+                <td><span class="car-type" style="margin:0;">{{ car.type }}</span></td>
+                <td>{{ car.brand }}</td>
+                <td>{{ car.model }}</td>
+                <td>{{ car.year }}</td>
+                <td class="accent-text">${{ "{:,}".format(car.price) }}</td>
+                <td class="action-cell">
+                    <a href="{{ url_for('admin_edit_vehicle', car_id=car.id) }}" class="btn-edit">Edit</a>
+                    <form action="{{ url_for('admin_delete_vehicle', car_id=car.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this vehicle?');">
+                        <button type="submit" class="btn-delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

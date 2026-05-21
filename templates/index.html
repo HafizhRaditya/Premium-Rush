@@ -2,16 +2,47 @@
 
 {% block content %}
 <div class="header-section">
-    <h1>VEHICLE <span class="neon-text">SHOWROOM</span></h1>
+    <h1>VEHICLE <span class="accent-text">SHOWROOM</span></h1>
     <p>Select your dream ride for the night.</p>
+</div>
+
+<div class="search-filter-bar">
+    <form action="{{ url_for('index') }}" method="GET" class="filter-form">
+        <input type="text" name="q" placeholder="Search models..." value="{{ request.args.get('q', '') }}">
+        
+        <select name="brand">
+            <option value="">All Brands</option>
+            {% for b in brands %}
+                <option value="{{ b }}" {% if request.args.get('brand') == b %}selected{% endif %}>{{ b }}</option>
+            {% endfor %}
+        </select>
+        
+        <select name="type">
+            <option value="">All Types</option>
+            {% for t in types %}
+                <option value="{{ t }}" {% if request.args.get('type') == t %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+        
+        <select name="sort">
+            <option value="">Sort by Price</option>
+            <option value="asc" {% if request.args.get('sort') == 'asc' %}selected{% endif %}>Price: Low to High</option>
+            <option value="desc" {% if request.args.get('sort') == 'desc' %}selected{% endif %}>Price: High to Low</option>
+        </select>
+        
+        <button type="submit" class="btn-primary btn-sm">Filter</button>
+        <a href="{{ url_for('index') }}" class="btn-clear">Clear</a>
+    </form>
 </div>
 
 <div class="grid-container">
     {% for car in vehicles %}
-    <a href="{{ url_for('car_detail', car_id=car['id']) }}" class="card-link">
+    <a href="{{ url_for('car_detail', car_id=car.id) }}" class="card-link">
         <div class="car-card">
             <div class="card-image">
-                {% if car.type == 'Tuner' %}
+                {% if car.image_url %}
+                    <img src="{{ url_for('static', filename=car.image_url) }}" alt="{{ car.model }}">
+                {% elif car.type == 'Tuner' %}
                     <img src="{{ url_for('static', filename='images/tuner.png') }}" alt="{{ car.model }}">
                 {% elif car.type == 'Muscle' %}
                     <img src="{{ url_for('static', filename='images/muscle.png') }}" alt="{{ car.model }}">
@@ -20,7 +51,7 @@
                 {% endif %}
             </div>
             <div class="card-details">
-                <div class="car-type {{ car.type.lower() }}">{{ car.type }}</div>
+                <div class="car-type">{{ car.type }}</div>
                 <h3>{{ car.brand }}</h3>
                 <h2>{{ car.model }}</h2>
                 <div class="car-meta">
@@ -30,6 +61,10 @@
             </div>
         </div>
     </a>
+    {% else %}
+    <div class="empty-state">
+        <h2>No vehicles found matching your criteria.</h2>
+    </div>
     {% endfor %}
 </div>
 {% endblock %}

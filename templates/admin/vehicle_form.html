@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2><span class="accent-text">{% if vehicle %}EDIT VEHICLE{% else %}ADD NEW VEHICLE{% endif %}</span></h2>
+    <form action="{% if vehicle %}{{ url_for('admin_edit_vehicle', car_id=vehicle.id) }}{% else %}{{ url_for('admin_add_vehicle') }}{% endif %}" method="POST">
+        <div class="form-group">
+            <label>Brand</label>
+            <input type="text" name="brand" value="{% if vehicle %}{{ vehicle.brand }}{% endif %}" required>
+        </div>
+        <div class="form-group">
+            <label>Model</label>
+            <input type="text" name="model" value="{% if vehicle %}{{ vehicle.model }}{% endif %}" required>
+        </div>
+        <div class="form-group">
+            <label>Class Type</label>
+            <select name="type" required>
+                <option value="Exotic" {% if vehicle and vehicle.type == 'Exotic' %}selected{% endif %}>Exotic</option>
+                <option value="Muscle" {% if vehicle and vehicle.type == 'Muscle' %}selected{% endif %}>Muscle</option>
+                <option value="Tuner" {% if vehicle and vehicle.type == 'Tuner' %}selected{% endif %}>Tuner</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Year</label>
+            <input type="number" name="year" value="{% if vehicle %}{{ vehicle.year }}{% endif %}" required>
+        </div>
+        <div class="form-group">
+            <label>Price ($)</label>
+            <input type="number" name="price" value="{% if vehicle %}{{ vehicle.price }}{% endif %}" required>
+        </div>
+        <div class="form-group">
+            <label>Image URL (Optional relative path)</label>
+            <input type="text" name="image_url" value="{% if vehicle and vehicle.image_url %}{{ vehicle.image_url }}{% endif %}" placeholder="e.g., images/testarossa.jpg">
+        </div>
+        <button type="submit" class="btn-primary">{% if vehicle %}Update{% else %}Save{% endif %} Vehicle</button>
+    </form>
+    <p class="auth-redirect" style="margin-top: 1rem;"><a href="{{ url_for('admin_dashboard') }}">&laquo; Back to Dashboard</a></p>
+</div>
+{% endblock %}
