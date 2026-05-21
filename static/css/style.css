@@ -164,6 +164,11 @@ h1, h2, h3 {
     transition: border-color 0.3s;
 }
 
+.filter-form select option {
+    background: var(--bg-color);
+    color: var(--text-main);
+}
+
 .filter-form input:focus,
 .filter-form select:focus {
     outline: none;

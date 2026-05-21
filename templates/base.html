@@ -8,13 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <audio id="bg-music" src="{{ url_for('static', filename='audio/Clair De Lune.mp3') }}" autoplay loop></audio>
+    <audio id="bg-music" src="{{ url_for('static', filename='audio/Clair De Lune.mp3') }}" loop></audio>
 
     <nav class="navbar">
         <div class="logo">
             <a href="{{ url_for('index') }}">PREMIUM <span class="accent-text">MOTOR RUSH</span></a>
         </div>
         <div class="nav-links">
+            <button id="music-toggle" class="nav-item" style="background:transparent; border:none; cursor:pointer; font-family:var(--font-body);">Music: OFF</button>
             <a href="{{ url_for('index') }}" class="nav-item">Showroom</a>
             {% if current_user.is_authenticated %}
                 {% if current_user.is_admin %}
@@ -48,12 +49,35 @@
     </main>
 
     <script>
-        document.addEventListener('click', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             var audio = document.getElementById('bg-music');
-            if (audio.paused) {
-                audio.play();
+            var toggleBtn = document.getElementById('music-toggle');
+            
+            var isMusicPlaying = localStorage.getItem('musicPlaying') === 'true';
+            
+            if (isMusicPlaying) {
+                audio.play().then(() => {
+                    toggleBtn.textContent = 'Music: ON';
+                }).catch(e => {
+                    toggleBtn.textContent = 'Music: OFF';
+                    localStorage.setItem('musicPlaying', 'false');
+                });
+            } else {
+                toggleBtn.textContent = 'Music: OFF';
             }
-        }, { once: true });
+
+            toggleBtn.addEventListener('click', function() {
+                if (audio.paused) {
+                    audio.play();
+                    toggleBtn.textContent = 'Music: ON';
+                    localStorage.setItem('musicPlaying', 'true');
+                } else {
+                    audio.pause();
+                    toggleBtn.textContent = 'Music: OFF';
+                    localStorage.setItem('musicPlaying', 'false');
+                }
+            });
+        });
     </script>
 </body>
 </html>
