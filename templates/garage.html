@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-section">
+    <h1>PERSONAL <span class="neon-text">GARAGE</span></h1>
+    <p>Your premium collection.</p>
+</div>
+
+<div class="grid-container">
+    {% if garage|length == 0 %}
+        <div class="empty-state">
+            <h2>Your garage is currently empty.</h2>
+            <p>Visit the <a href="{{ url_for('index') }}">Showroom</a> to purchase your first ride.</p>
+        </div>
+    {% else %}
+        {% for car in garage %}
+        <div class="car-card garage-card">
+            <div class="card-image">
+                {% if car.type == 'Tuner' %}
+                    <img src="{{ url_for('static', filename='images/tuner.png') }}" alt="{{ car.model }}">
+                {% elif car.type == 'Muscle' %}
+                    <img src="{{ url_for('static', filename='images/muscle.png') }}" alt="{{ car.model }}">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/exotic.png') }}" alt="{{ car.model }}">
+                {% endif %}
+            </div>
+            <div class="card-details">
+                <div class="car-type {{ car.type.lower() }}">{{ car.type }}</div>
+                <h3>{{ car.brand }}</h3>
+                <h2>{{ car.model }}</h2>
+                <div class="car-meta">
+                    <span>{{ car.year }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

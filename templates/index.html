@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-section">
+    <h1>VEHICLE <span class="neon-text">SHOWROOM</span></h1>
+    <p>Select your dream ride for the night.</p>
+</div>
+
+<div class="grid-container">
+    {% for car in vehicles %}
+    <a href="{{ url_for('car_detail', car_id=car['id']) }}" class="card-link">
+        <div class="car-card">
+            <div class="card-image">
+                {% if car.type == 'Tuner' %}
+                    <img src="{{ url_for('static', filename='images/tuner.png') }}" alt="{{ car.model }}">
+                {% elif car.type == 'Muscle' %}
+                    <img src="{{ url_for('static', filename='images/muscle.png') }}" alt="{{ car.model }}">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/exotic.png') }}" alt="{{ car.model }}">
+                {% endif %}
+            </div>
+            <div class="card-details">
+                <div class="car-type {{ car.type.lower() }}">{{ car.type }}</div>
+                <h3>{{ car.brand }}</h3>
+                <h2>{{ car.model }}</h2>
+                <div class="car-meta">
+                    <span>{{ car.year }}</span>
+                    <span class="price">${{ "{:,}".format(car.price) }}</span>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="car-detail-container">
+    <a href="{{ url_for('index') }}" class="back-btn">&laquo; Back to Showroom</a>
+    
+    <div class="car-detail-card">
+        <div class="detail-image-sec">
+            {% if car.type == 'Tuner' %}
+                <img src="{{ url_for('static', filename='images/tuner.png') }}" alt="{{ car.model }}">
+            {% elif car.type == 'Muscle' %}
+                <img src="{{ url_for('static', filename='images/muscle.png') }}" alt="{{ car.model }}">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/exotic.png') }}" alt="{{ car.model }}">
+            {% endif %}
+        </div>
+        
+        <div class="detail-info-sec">
+            <div class="car-type {{ car.type.lower() }}">{{ car.type }} CLASS</div>
+            <h1>{{ car.brand }} <span class="neon-text">{{ car.model }}</span></h1>
+            
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <span class="spec-label">Year</span>
+                    <span class="spec-value">{{ car.year }}</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Price</span>
+                    <span class="spec-value neon-text-green">${{ "{:,}".format(car.price) }}</span>
+                </div>
+            </div>
+            
+            <div class="description-box">
+                <h3>Vehicle Profile</h3>
+                {% if car.type == 'Tuner' %}
+                    <p>Highly customizable and nimble. Perfect for tight corners and street racing.</p>
+                {% elif car.type == 'Muscle' %}
+                    <p>Raw V8 power and heavy chassis. Dominates in straight-line acceleration and drag strips.</p>
+                {% else %}
+                    <p>Million-dollar engineering. Incredible top speed and breathtaking aerodynamic design.</p>
+                {% endif %}
+            </div>
+            
+            <form action="{{ url_for('buy_car', car_id=car.id) }}" method="POST">
+                <button type="submit" class="btn-buy" {% if balance < car.price %}disabled{% endif %}>
+                    {% if balance < car.price %}
+                        INSUFFICIENT FUNDS
+                    {% else %}
+                        PURCHASE VEHICLE
+                    {% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

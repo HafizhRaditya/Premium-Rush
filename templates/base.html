@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Motor Deluxe</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Fonts for modern aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Audio -->
+    <audio id="bg-music" src="{{ url_for('static', filename='audio/Clair De Lune.mp3') }}" autoplay loop></audio>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('index') }}">PREMIUM <span class="neon-text">MOTOR DELUXE</span></a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="nav-item">Showroom</a>
+            <a href="{{ url_for('garage') }}" class="nav-item">Garage</a>
+        </div>
+        <div class="balance">
+            Balance: <span class="neon-text-green">${{ "{:,}".format(balance) }}</span>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        // Start audio slightly delayed if browser blocks autoplay
+        document.addEventListener('click', function() {
+            var audio = document.getElementById('bg-music');
+            if (audio.paused) {
+                audio.play();
+            }
+        }, { once: true });
+    </script>
+</body>
+</html>
